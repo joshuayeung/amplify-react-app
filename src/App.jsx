@@ -8,12 +8,15 @@ import React, { useEffect, useState } from "react";
 import { listSongs } from "./graphql/queries";
 import { updateSong } from "./graphql/mutations";
 
-import ReactPlayer from 'react-player';
+import ReactPlayer from "react-player";
 
 import { IconButton, Paper } from "@material-ui/core";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import PauseIcon from "@material-ui/icons/Pause";
+import AddIcon from "@material-ui/icons/Add";
+
+import AddSong from "./AddSong";
 
 Amplify.configure(awsconfig);
 
@@ -21,6 +24,7 @@ function App() {
   const [songs, setSongs] = useState([]);
   const [songPlaying, setSongPlaying] = useState("");
   const [audioURL, setAudioURL] = useState("");
+  const [showAddSong, setShowAddNewSong] = useState(false);
 
   const fetchSongs = async () => {
     try {
@@ -119,6 +123,19 @@ function App() {
             </Paper>
           );
         })}
+
+        {showAddSong ? (
+          <AddSong
+            onUpload={() => {
+              setShowAddNewSong(false);
+              fetchSongs();
+            }}
+          />
+        ) : (
+          <IconButton onClick={() => setShowAddNewSong(true)}>
+            <AddIcon />
+          </IconButton>
+        )}
       </div>
     </div>
   );
